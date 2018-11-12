@@ -55,17 +55,14 @@ class SequelizeDbAdapter {
 		return this.db.authenticate().then(() => {
 
 			let modelDefinitionOrInstance = this.service.schema.model;
-			let modelReadyPromise;
 			let isModelInstance = modelDefinitionOrInstance && modelDefinitionOrInstance.hasOwnProperty("attributes");
 			if (isModelInstance){
 				this.model = modelDefinitionOrInstance;
-				modelReadyPromise = Promise.resolve();
 			}else {
 				this.model = this.db.define(modelDefinitionOrInstance.name, modelDefinitionOrInstance.define, modelDefinitionOrInstance.options);
-				modelReadyPromise  = this.model.sync();
 			}
 			this.service.model = this.model;
-			return modelReadyPromise ;
+			return this.model.sequelize.sync() ;
 		});
 	}
 

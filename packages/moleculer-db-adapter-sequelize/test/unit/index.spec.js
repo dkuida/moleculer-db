@@ -5,7 +5,7 @@ const {ServiceBroker} = require("moleculer");
 jest.mock("sequelize");
 
 const model = {
-	sync: jest.fn(() => Promise.resolve()),
+	sequelize: {sync: jest.fn(() => Promise.resolve())},
 	findAll: jest.fn(() => Promise.resolve()),
 	count: jest.fn(() => Promise.resolve()),
 	findOne: jest.fn(() => Promise.resolve()),
@@ -46,7 +46,8 @@ const fakeModel = {
 	}
 };
 const initiatedModel = {
-	attributes: {}
+	attributes: {},
+	sequelize: {sync: jest.fn(() => Promise.resolve())},
 };
 
 
@@ -118,7 +119,7 @@ describe("Test SequelizeAdapter", () => {
 				expect(adapter.model).toBe(model);
 				expect(adapter.service.model).toBe(model);
 
-				expect(adapter.model.sync).toHaveBeenCalledTimes(1);
+				expect(adapter.model.sequelize.sync).toHaveBeenCalledTimes(1);
 
 			});
 		});
